@@ -6,9 +6,10 @@ from datetime import datetime, timedelta, timezone
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from config import config
-from dataset_creator import DatasetCreator
-from mongo_wrapper import MongoWrapper
+from datasets.config.config import config
+from datasets.clases.dataset_creator import DatasetCreator
+from datasets.clases.mongo_wrapper import MongoWrapper
+from data_pipeline import get_data, upload_data
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,40 +17,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 def run_pipeline():
     end_time = datetime.now(timezone.utc)
     start_time = end_time - timedelta(hours=config.LOOKBACK_HOURS)
-    tag = f"{start_time.strftime('%Y-%m-%dT%H:%M')} - {end_time.strftime('%Y-%m-%dT%H:%M')}"
+    tag = f"{start_time.strftime('%Y-%m-%d')} - {end_time.strftime('%Y-%m-%d')}"
 
-    logger.info(f"Starting pipeline run | window: {tag}")
-
-    mongo_wrapper = MongoWrapper(
-        config.MONGO_URI,
-        config.MONGO_DB,
-        config.MONGO_COLLECTION,
-    )
-    dataset_creator = DatasetCreator(
-        config.CLEARML_DATASET_PROJECT,
-        config.CLEARML_DATASET_NAME,
-    )
-
-    data = mongo_wrapper.fetch_data(config.DATE_FIELD, start_time, end_time)
+    data = get_data(start_time, end_time)
     if not data:
         logger.warning("No documents found for the given window — skipping upload.")
         return
 
-    logger.info(f"Fetched {len(data)} documents from MongoDB.")
-
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        for doc in data:
-            file_path = f"{tmp_dir}/{doc['_id']}.json"
-            with open(file_path, "w", encoding="utf8") as f:
-                json.dump(doc, f, ensure_ascii=False, default=json_util.default)
-
-        dataset = dataset_creator.upload_version(tag, tmp_dir)
-        logger.info(f"Dataset uploaded successfully | id: {dataset.id} | tag: {tag}")
-
+    upload_data(data, tag)
 
 def main():
     logger.info(

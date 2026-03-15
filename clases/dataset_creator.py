@@ -1,4 +1,5 @@
 from clearml import Dataset
+from datetime import datetime
 
 
 class DatasetCreator:
@@ -12,16 +13,17 @@ class DatasetCreator:
         self._dataset_name = dataset_name
 
 
-    def upload_version(self, tag: str, files_path: str) -> Dataset | None:
+    def upload_version(self, files_path: str, tag: str | None = None) -> Dataset | None:
         """
             create new version of dataset, upload files, and finalize it
         """
         try:
+            created_at_tag = f"created_at: {datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}"
             parent_id = self._get_latest_parent()
             dataset = Dataset.create(
                 dataset_project=self._dataset_project,
                 dataset_name=self._dataset_name,
-                dataset_tags=[tag],
+                dataset_tags=[created_at_tag, tag],
                 parent_datasets=[parent_id] if parent_id else None,
             )
 
