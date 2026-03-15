@@ -15,5 +15,7 @@ class Config:
     END_DATE: str = os.getenv("END_DATE")
     CLEARML_DATASET_PROJECT: str = os.getenv("CLEARML_DATASET_PROJECT")
     CLEARML_DATASET_NAME: str = os.getenv("CLEARML_DATASET_NAME")
+    SCHEDULE_INTERVAL_HOURS: int = int(os.getenv("SCHEDULE_INTERVAL_HOURS", "24"))
+    LOOKBACK_HOURS: int = int(os.getenv("LOOKBACK_HOURS", "24"))
 
 config = Config()
