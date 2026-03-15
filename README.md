@@ -10,16 +10,18 @@ Each run queries MongoDB for documents within a time window and uploads them as 
 
 All settings are managed via `.env`:
 
-| Variable | Description |
-|---|---|
-| `MONGO_URI` | MongoDB connection string |
-| `MONGO_DB` | Database name |
-| `MONGO_COLLECTION` | Collection name |
-| `DATE_FIELD` | The datetime field to filter by |
-| `CLEARML_DATASET_PROJECT` | ClearML project name |
-| `CLEARML_DATASET_NAME` | ClearML dataset name |
+| Variable | Description                                        |
+|---|----------------------------------------------------|
+| `MONGO_URI` | MongoDB connection string                          |
+| `MONGO_DB` | Database name                                      |
+| `MONGO_COLLECTION` | Collection name                                    |
+| `START_DATE` | since when to fetch documents                      |
+| `END_DATE` | fetch until this time                              |
+| `DATE_FIELD` | The datetime field to filter by                    |
+| `CLEARML_DATASET_PROJECT` | ClearML project name                               |
+| `CLEARML_DATASET_NAME` | ClearML dataset name                               |
 | `SCHEDULE_INTERVAL_HOURS` | How often the scheduler runs (scheduler mode only) |
-| `LOOKBACK_HOURS` | How far back each run looks (scheduler mode only) |
+| `LOOKBACK_HOURS` | How far back each run looks (scheduler mode only)  |
 
 ## Running
 
