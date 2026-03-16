@@ -40,14 +40,11 @@ class DatasetCreator:
             get latest version id of to the dataset if exists
         """
         try:
-            datasets = Dataset.list_datasets(
+            dataset_parent = Dataset.get(
                 dataset_project=self._dataset_project,
                 partial_name=self._dataset_name,
-                only_completed=True,
             )
-            if not datasets:
-                return
-            return sorted(datasets, key=lambda d: d.get("created", ""))[-1].get("id")
+            return dataset_parent.id
         except Exception as e:
             print(f"Could not fetch parent dataset: {e}")
             return
