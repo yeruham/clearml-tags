@@ -9,7 +9,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from datasets.config.config import config
 from datasets.clases.dataset_creator import DatasetCreator
 from datasets.clases.mongo_wrapper import MongoWrapper
-from data_pipeline import get_data, upload_data
+from data_actions import get_data, upload_data
 
 logging.basicConfig(
     level=logging.INFO,
